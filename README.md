@@ -67,3 +67,31 @@ Instead what happens is these threads are not run in synchronously (one after
 So here is the indeterministic output we get:
 
 ![thread-1.jpf](/doc/img/thread-1.jpg)
+
+You see we at least get the correct number of messages, 6, for each thread
+ and also the correct text "red", "green", and "blue" for each of the thread
+id numbers.
+
+The next logical step is to surround the code accessing the foreground resource
+with a object lock:
+
+```csharp
+    private static object myLock = new object();
+    public static void MyThread(int threadNumber, ConsoleColor color)
+    {
+        lock (myLock)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                Print(threadNumber, color);
+            }
+        }
+        
+    }
+```
+
+Now we see from the output that the foreground color is getting set in the
+correct threads, but the threads still get fired off and we don't really
+know in what order they'll get executed:
+
+![thread-2.jpf](/doc/img/thread-2.jpg)
