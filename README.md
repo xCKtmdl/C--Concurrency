@@ -95,3 +95,22 @@ correct threads, but the threads still get fired off and we don't really
 know in what order they'll get executed:
 
 ![thread-2.jpf](/doc/img/thread-2.jpg)
+
+If you wanted to run the threads synchronously, you could get rid of the object
+lock and use the Join() method as follows:
+
+```csharp
+var thread1 = new Thread(() => NewClass.MyThread(1, ConsoleColor.Red));
+thread1.Start();
+thread1.Join();
+
+var thread2 = new Thread(() => NewClass.MyThread(2, ConsoleColor.Green));
+thread2.Start();
+thread2.Join();
+
+var thread3 = new Thread(() => NewClass.MyThread(3, ConsoleColor.Blue));
+thread3.Start();
+thread3.Join();
+```
+
+![thread-3.jpf](/doc/img/thread-3.jpg)
